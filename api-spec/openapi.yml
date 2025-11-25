@@ -34,3 +34,5 @@ paths:
     $ref: './paths/login.yml'
   /profile/:
     $ref: './paths/profile.yml'
+  /messages/:
+    $ref: './paths/messages-list.yml'
