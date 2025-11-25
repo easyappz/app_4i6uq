@@ -88,9 +88,9 @@ class ProfileView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class MessageListView(APIView):
+class MessageListCreateView(APIView):
     """
-    API endpoint for getting all chat messages.
+    API endpoint for getting all chat messages and creating new messages.
     """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -103,14 +103,6 @@ class MessageListView(APIView):
         messages = Message.objects.all().select_related('author').order_by('created_at')
         serializer = ChatMessageSerializer(messages, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class MessageCreateView(APIView):
-    """
-    API endpoint for creating a new chat message.
-    """
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     @extend_schema(
         request=ChatMessageSerializer,

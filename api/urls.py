@@ -4,8 +4,7 @@ from .views import (
     RegisterView,
     LoginView,
     ProfileView,
-    MessageListView,
-    MessageCreateView
+    MessageListCreateView
 )
 
 urlpatterns = [
@@ -13,6 +12,5 @@ urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),
     path("profile/", ProfileView.as_view(), name="profile"),
-    path("messages/", MessageListView.as_view(), name="messages-list"),
-    path("messages/", MessageCreateView.as_view(), name="messages-create"),
+    path("messages/", MessageListCreateView.as_view(), name="messages-list-create"),
 ]
