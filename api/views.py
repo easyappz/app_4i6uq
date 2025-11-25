@@ -7,8 +7,10 @@ from .serializers import (
     MessageSerializer,
     RegisterSerializer,
     LoginSerializer,
-    ProfileSerializer
+    ProfileSerializer,
+    ChatMessageSerializer
 )
+from .models import Message
 from .authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -84,3 +86,40 @@ class ProfileView(APIView):
     def get(self, request):
         serializer = ProfileSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class MessageListView(APIView):
+    """
+    API endpoint for getting all chat messages.
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        responses={200: ChatMessageSerializer(many=True)},
+        description="Get list of all chat messages"
+    )
+    def get(self, request):
+        messages = Message.objects.all().select_related('author').order_by('created_at')
+        serializer = ChatMessageSerializer(messages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class MessageCreateView(APIView):
+    """
+    API endpoint for creating a new chat message.
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        request=ChatMessageSerializer,
+        responses={201: ChatMessageSerializer},
+        description="Create a new chat message"
+    )
+    def post(self, request):
+        serializer = ChatMessageSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"error": str(serializer.errors)}, status=status.HTTP_400_BAD_REQUEST)

@@ -69,3 +69,19 @@ class Token(models.Model):
         if not self.key:
             self.key = self.generate_key()
         return super().save(*args, **kwargs)
+
+
+class Message(models.Model):
+    """
+    Chat message model.
+    """
+    text = models.TextField()
+    author = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='messages')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'messages'
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Message from {self.author.login}: {self.text[:50]}"

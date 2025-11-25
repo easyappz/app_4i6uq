@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member, Token
+from .models import Member, Token, Message
 
 
 class MessageSerializer(serializers.Serializer):
@@ -84,3 +84,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Member
         fields = ['id', 'login']
         read_only_fields = ['id', 'login']
+
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    """Serializer for chat messages."""
+    author_login = serializers.CharField(source='author.login', read_only=True)
+    
+    class Meta:
+        model = Message
+        fields = ['id', 'text', 'author_login', 'created_at']
+        read_only_fields = ['id', 'author_login', 'created_at']
+
+    def create(self, validated_data):
+        """Create a new message with the current user as author."""
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)
