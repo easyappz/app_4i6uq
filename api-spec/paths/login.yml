@@ -1,0 +1,59 @@
+post:
+  summary: Login user
+  description: Authenticate user with login and password
+  operationId: loginUser
+  tags:
+    - Authentication
+  security: []
+  x-isSecure: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - login
+            - password
+          properties:
+            login:
+              type: string
+              description: User login
+              example: john_doe
+            password:
+              type: string
+              format: password
+              description: User password
+              example: securePassword123
+  responses:
+    '200':
+      description: User successfully authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: User ID
+                example: 1
+              login:
+                type: string
+                description: User login
+                example: john_doe
+              token:
+                type: string
+                description: Authentication token
+                example: 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b
+    '400':
+      description: Bad request - invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'
+    '401':
+      description: Unauthorized - invalid login or password
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'

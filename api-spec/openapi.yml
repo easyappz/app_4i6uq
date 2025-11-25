@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: Application API
+  version: 1.0.0
+  description: API for user authentication and profile management
+
+servers:
+  - url: /api
+    description: API server
+
+security:
+  - TokenAuth: []
+
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token authentication using format 'Token <token>'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+paths:
+  /register/:
+    $ref: './paths/register.yml'
+  /login/:
+    $ref: './paths/login.yml'
+  /profile/:
+    $ref: './paths/profile.yml'

@@ -1,0 +1,53 @@
+post:
+  summary: Register a new user
+  description: Create a new user account with login and password
+  operationId: registerUser
+  tags:
+    - Authentication
+  security: []
+  x-isSecure: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - login
+            - password
+          properties:
+            login:
+              type: string
+              description: User login
+              example: john_doe
+            password:
+              type: string
+              format: password
+              description: User password
+              example: securePassword123
+  responses:
+    '201':
+      description: User successfully registered
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: User ID
+                example: 1
+              login:
+                type: string
+                description: User login
+                example: john_doe
+              token:
+                type: string
+                description: Authentication token
+                example: 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b
+    '400':
+      description: Bad request - validation error
+      content:
+        application/json:
+          schema:
+            $ref: '../openapi.yml#/components/schemas/Error'
